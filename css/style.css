@@ -3,7 +3,7 @@
    Urutan isi:
    1. Font & dasar
    2. Komponen (judul, tombol, foto, kartu profil, skill, dialog)
-   3. Animasi halaman (reveal, loading, hero, kunang-kunang, dll)
+   3. Animasi halaman (reveal, loading, hero, suasana gua, dll)
    4. Fitur game (HUD, achievement, level up, partikel, rainbow)
    5. Reduced motion
    ========================================================= */
@@ -177,8 +177,8 @@ section { scroll-margin-top: 90px; }
         top: -1.1rem;
         left: 1rem;
         padding: 0 0.75rem;
-        background: #4AA294;
-        border: 3px solid #F9DCB4;
+        background: #C07E4E;
+        border: 3px solid #592918;
         border-radius: 6px;
         color: #fff;
         font-size: 1.25rem;
@@ -423,29 +423,95 @@ section { scroll-margin-top: 90px; }
 
 .lightbox.is-open #lightbox-img { transform: scale(1); }
 
-/* Kunang-kunang */
-.firefly {
+/* Suasana gua harta karun */
+
+/* Sinar cahaya dari celah langit-langit, bergoyang & berdenyut pelan */
+.cave-rays {
+    background: repeating-conic-gradient(from 0deg at 50% -20%,
+        rgba(255, 220, 150, 0) 0deg,
+        rgba(255, 220, 150, 0.16) 1.5deg,
+        rgba(255, 220, 150, 0) 3.5deg 7deg);
+    -webkit-mask-image: radial-gradient(ellipse 55% 75% at 50% 0%, #000 10%, transparent 75%);
+    mask-image: radial-gradient(ellipse 55% 75% at 50% 0%, #000 10%, transparent 75%);
+    mix-blend-mode: screen;
+    transform-origin: 50% 0;
+    animation: rays-sway 14s ease-in-out infinite alternate, rays-pulse 6s ease-in-out infinite;
+}
+
+@keyframes rays-sway {
+    from { rotate: -4deg; }
+    to   { rotate: 4deg; }
+}
+
+@keyframes rays-pulse {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+}
+
+/* Tepi layar gelap yang berkedip seperti diterangi obor */
+.cave-vignette {
+    background: radial-gradient(ellipse 80% 70% at 50% 45%, transparent 45%, rgba(30, 10, 3, 0.7) 100%);
+    animation: torch-flicker 5s ease-in-out infinite;
+}
+
+@keyframes torch-flicker {
+    0%, 100% { opacity: 0.85; }
+    20%      { opacity: 1; }
+    35%      { opacity: 0.75; }
+    50%      { opacity: 0.95; }
+    70%      { opacity: 0.7; }
+    85%      { opacity: 0.9; }
+}
+
+/* Debu emas yang melayang naik dari bawah */
+.gold-dust {
     position: absolute;
-    width: 6px;
-    height: 6px;
+    top: 100%;
+    width: var(--size);
+    height: var(--size);
     border-radius: 50%;
-    background: #F3E27A;
-    box-shadow: 0 0 10px 3px rgba(243, 182, 65, 0.8);
+    background: radial-gradient(circle, #FFF4C8 0%, #F3B641 60%, #E09A2B 100%);
+    box-shadow: 0 0 8px 2px rgba(243, 182, 65, 0.7);
     opacity: 0;
-    animation: firefly-drift var(--dur) ease-in-out infinite, firefly-glow var(--glow) ease-in-out infinite;
+    animation: dust-rise var(--dur) linear infinite, dust-sway calc(var(--dur) / 3) ease-in-out infinite alternate;
     animation-delay: var(--delay);
 }
 
-@keyframes firefly-drift {
-    0%, 100% { transform: translate(0, 0); }
-    25%      { transform: translate(var(--dx), calc(var(--dy) * -1)); }
-    50%      { transform: translate(calc(var(--dx) * -1), var(--dy)); }
-    75%      { transform: translate(var(--dy), var(--dx)); }
+@keyframes dust-rise {
+    0%       { opacity: 0; transform: translateY(0); }
+    10%, 75% { opacity: 1; }
+    100%     { opacity: 0; transform: translateY(-110vh); }
 }
 
-@keyframes firefly-glow {
-    0%, 100% { opacity: 0; }
-    50%      { opacity: 1; }
+@keyframes dust-sway {
+    from { translate: calc(var(--sway) * -1) 0; }
+    to   { translate: var(--sway) 0; }
+}
+
+/* Kilau kristal: bintang 4 sudut yang sesekali berkedip */
+.glint {
+    position: absolute;
+    width: var(--size);
+    height: var(--size);
+    filter: drop-shadow(0 0 4px var(--color));
+    opacity: 0;
+    animation: glint-twinkle var(--dur) ease-in-out infinite;
+    animation-delay: var(--delay);
+}
+
+/* Bentuk bintang ada di ::before, supaya cahaya drop-shadow tidak ikut terpotong */
+.glint::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color);
+    clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+}
+
+@keyframes glint-twinkle {
+    0%, 70%, 100% { opacity: 0; transform: scale(0) rotate(0); }
+    80%           { opacity: 1; transform: scale(1) rotate(45deg); }
+    90%           { opacity: 0.6; transform: scale(0.6) rotate(90deg); }
 }
 
 /* Jejak bintang di belakang kursor */
@@ -650,7 +716,7 @@ section { scroll-margin-top: 90px; }
     html { scroll-behavior: auto; }
     .js .reveal { opacity: 1; transform: none; transition: none; }
     .animate-float, .typing::after, .btn-shine::after, .logo-wiggle:hover,
-    .blink, .dialog-next, .preloader-logo { animation: none; }
+    .blink, .dialog-next, .preloader-logo, .cave-rays, .cave-vignette { animation: none; }
     .js .hero-letter, .js .stagger-item { opacity: 1; animation: none; }
     .skill-fill { transition: none; }
 }

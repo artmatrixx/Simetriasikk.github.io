@@ -199,23 +199,38 @@ document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
 });
 
-// ===== 7. Kunang-kunang beterbangan di latar =====
-const firefliesBox = document.getElementById('fireflies');
+// ===== 7. Suasana gua: debu emas melayang naik & kilau kristal =====
+const caveFx = document.getElementById('cave-fx');
 
-if (firefliesBox && !prefersReducedMotion) {
-    const fireflyCount = window.innerWidth < 768 ? 12 : 25;
+if (caveFx && !prefersReducedMotion) {
+    const isSmallScreen = window.innerWidth < 768;
+    const random = (min, max) => min + Math.random() * (max - min);
 
-    for (let i = 0; i < fireflyCount; i++) {
-        const firefly = document.createElement('span');
-        firefly.className = 'firefly';
-        firefly.style.left = Math.random() * 100 + '%';
-        firefly.style.top = Math.random() * 100 + '%';
-        firefly.style.setProperty('--dx', Math.random() * 80 - 40 + 'px');
-        firefly.style.setProperty('--dy', Math.random() * 80 - 40 + 'px');
-        firefly.style.setProperty('--dur', 8 + Math.random() * 8 + 's');
-        firefly.style.setProperty('--glow', 2 + Math.random() * 3 + 's');
-        firefly.style.setProperty('--delay', -Math.random() * 8 + 's');
-        firefliesBox.appendChild(firefly);
+    // Debu emas: mulai dari bawah layar lalu naik sambil bergoyang
+    for (let i = 0; i < (isSmallScreen ? 14 : 30); i++) {
+        const dust = document.createElement('span');
+        dust.className = 'gold-dust';
+        dust.style.left = random(0, 100) + '%';
+        dust.style.setProperty('--size', random(2, 6) + 'px');
+        dust.style.setProperty('--sway', random(-60, 60) + 'px');
+        dust.style.setProperty('--dur', random(10, 22) + 's');
+        dust.style.setProperty('--delay', -random(0, 22) + 's'); // negatif = langsung tersebar
+        caveFx.appendChild(dust);
+    }
+
+    // Kilau kristal: lebih banyak di bagian atas, tempat kristal di gambar latar
+    const glintColors = ['#F3B641', '#F9DCB4', '#5AB3AD'];
+
+    for (let i = 0; i < (isSmallScreen ? 8 : 16); i++) {
+        const glint = document.createElement('span');
+        glint.className = 'glint';
+        glint.style.left = random(0, 100) + '%';
+        glint.style.top = random(0, 70) + '%';
+        glint.style.setProperty('--size', random(8, 18) + 'px');
+        glint.style.setProperty('--color', glintColors[i % glintColors.length]);
+        glint.style.setProperty('--dur', random(3, 7) + 's');
+        glint.style.setProperty('--delay', -random(0, 7) + 's');
+        caveFx.appendChild(glint);
     }
 }
 
@@ -235,5 +250,102 @@ if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fin
         document.body.appendChild(sparkle);
 
         sparkle.addEventListener('animationend', () => sparkle.remove());
+    });
+}
+
+// ===== 9. Kotak dialog About Me: klik untuk lanjut ke kalimat berikutnya =====
+const dialog = document.getElementById('dialog');
+const dialogText = document.getElementById('dialog-text');
+const dialogLines = [
+    dialogText.textContent.trim(),
+    'Di sini kamu bisa lihat skill dan pengalamanku selama ini.',
+    'Psst... coba ketik kode rahasia: ↑ ↑ ↓ ↓ ← → ← → B A',
+];
+let dialogIndex = 0;
+let dialogTimer = null;
+
+function typeDialogLine(line) {
+    if (prefersReducedMotion) {
+        dialogText.textContent = line;
+        return;
+    }
+
+    let index = 0;
+    dialogText.textContent = '';
+    dialog.classList.add('is-typing');
+
+    dialogTimer = setInterval(() => {
+        index++;
+        dialogText.textContent = line.slice(0, index);
+        if (index >= line.length) finishDialogLine();
+    }, 30);
+}
+
+function finishDialogLine() {
+    clearInterval(dialogTimer);
+    dialogTimer = null;
+    dialogText.textContent = dialogLines[dialogIndex];
+    dialog.classList.remove('is-typing');
+}
+
+function advanceDialog() {
+    // Kalau masih mengetik, tampilkan kalimat penuh dulu
+    if (dialogTimer) {
+        finishDialogLine();
+        return;
+    }
+
+    dialogIndex = (dialogIndex + 1) % dialogLines.length;
+
+    typeDialogLine(dialogLines[dialogIndex]);
+}
+
+dialog.addEventListener('click', advanceDialog);
+dialog.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        advanceDialog();
+    }
+});
+
+// ===== 10. Kode rahasia (Konami code) untuk mode pelangi =====
+const secretCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+let secretProgress = 0;
+
+document.addEventListener('keydown', (event) => {
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+
+    if (key === secretCode[secretProgress]) secretProgress++;
+    else secretProgress = key === secretCode[0] ? 1 : 0;
+
+    if (secretProgress === secretCode.length) {
+        secretProgress = 0;
+        document.body.classList.toggle('rainbow');
+    }
+});
+
+// ===== 11. Partikel pixel meletup saat klik =====
+if (!prefersReducedMotion) {
+    const pixelColors = ['#F3B641', '#F9DCB4', '#C07E4E', '#4AA294', '#5AB3AD'];
+
+    document.addEventListener('click', (event) => {
+        for (let i = 0; i < 10; i++) {
+            const pixel = document.createElement('span');
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 30 + Math.random() * 50;
+
+            pixel.className = 'pixel';
+            pixel.style.left = event.clientX + 'px';
+            pixel.style.top = event.clientY + 'px';
+            pixel.style.setProperty('--size', 4 + Math.round(Math.random() * 4) + 'px');
+            pixel.style.setProperty('--color', pixelColors[i % pixelColors.length]);
+            pixel.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+            pixel.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+            pixel.style.setProperty('--rot', Math.random() * 360 + 'deg');
+            pixel.style.setProperty('--dur', 0.5 + Math.random() * 0.3 + 's');
+            document.body.appendChild(pixel);
+
+            pixel.addEventListener('animationend', () => pixel.remove());
+        }
     });
 }

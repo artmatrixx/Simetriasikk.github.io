@@ -89,8 +89,12 @@
         <!-- Lapisan gelap yang makin pekat saat di-scroll (js/background.js) -->
         <div id="bg-overlay" class="fixed inset-0 -z-10 bg-black opacity-0 pointer-events-none"></div>
 
-        <!-- Kunang-kunang (dibuat otomatis oleh js/main.js) -->
-        <div id="fireflies" class="fixed inset-0 -z-5 pointer-events-none overflow-hidden"></div>
+        <!-- Sinar cahaya dari langit-langit gua + bayangan obor di tepi layar -->
+        <div class="cave-rays fixed inset-0 -z-15 pointer-events-none" aria-hidden="true"></div>
+        <div class="cave-vignette fixed inset-0 -z-15 pointer-events-none" aria-hidden="true"></div>
+
+        <!-- Debu emas & kilau kristal (dibuat otomatis oleh js/main.js) -->
+        <div id="cave-fx" class="fixed inset-0 -z-5 pointer-events-none overflow-hidden" aria-hidden="true"></div>
 
         <!-- Section 1: Hero -->
         <section id="hero" class="w-full flex flex-col pt-[166px] md:pt-[270px] justify-center items-center gap-4">
@@ -129,10 +133,10 @@
                 <h2 class="title-game">About<span class="hidden lg:inline"> Me</span></h2>
 
                 <!-- Kotak dialog -->
-                <div id="dialog" class="dialog-box text-left">
+                <div id="dialog" class="dialog-box text-left" tabindex="0" role="button" aria-label="Lanjutkan dialog">
                     <span class="dialog-speaker">Rafa</span>
                     <p id="dialog-text" class="font-times text-[#F9DCB4] text-[1rem] md:text-[1.25rem] lg:text-[1.5rem] leading-snug">
-                        Halo semua aku Rafa, aku dari ITS jurusan Sistem Informasi, aku suka ngoding dan belajar.
+                        Halo semua aku Rafa, aku dari ITB Fakultas FTTM, aku suka ngoding dan belajar.
                     </p>
                     <span class="dialog-next" aria-hidden="true">&#9660;</span>
                 </div>
@@ -158,11 +162,11 @@
                         <!-- Ubah nilai --level (0%–100%) untuk mengatur panjang bar -->
                         <ul class="font-times font-bold flex flex-col gap-1 md:gap-2 mt-2 text-[1rem] md:text-[1.5rem] lg:text-[2rem]">
                             <li class="skill stagger-item" style="--i: 0; --level: 80%">
-                                <span class="skill-name">HTML</span>
+                                <span class="skill-name">PHP</span>
                                 <span class="skill-bar"><span class="skill-fill"></span></span>
                             </li>
                             <li class="skill stagger-item" style="--i: 1; --level: 70%">
-                                <span class="skill-name">CSS</span>
+                                <span class="skill-name">MySQL</span>
                                 <span class="skill-bar"><span class="skill-fill"></span></span>
                             </li>
                             <li class="skill stagger-item" style="--i: 2; --level: 55%">
