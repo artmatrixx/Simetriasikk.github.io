@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio Rafa Akila Rasky — mahasiswa Sistem Informasi ITS.">
+    <title>Rafa Akila Rasky | Portfolio</title>
+    <link rel="icon" href="assets/images/navbar/logo.svg" type="image/svg+xml">
+
+    <!-- Tailwind CSS v4 (dibutuhkan untuk text-shadow-[...], mt-100, px-15, dll) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11"></script>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Tandai bahwa JavaScript aktif, supaya animasi hanya jalan kalau JS ada -->
+    <script>document.documentElement.classList.add('js');</script>
+</head>
+
+<body class="font-zelda bg-black text-white m-0 p-0">
+
+    <!-- ===== Layar loading  ===== -->
+    <div id="preloader" class="preloader fixed inset-0 z-[100] flex-col items-center justify-center gap-6 bg-[#2B1208]">
+        <img class="preloader-logo h-20 w-auto" src="assets/images/navbar/logo.svg" alt="">
+        <div class="loading-bar" role="progressbar" aria-label="Memuat halaman">
+            <span id="loading-fill" class="loading-fill"></span>
+        </div>
+        <p id="loading-text" class="text-[#F9DCB4] text-[1.75rem]">Loading 0%</p>
+    </div>
+
+    <!-- Garis progres scroll di paling atas -->
+    <div id="scroll-progress" class="fixed top-0 left-0 h-[4px] w-0 z-[70] bg-[linear-gradient(to_right,#4AA294,#F3B641)]"></div>
+
+    <!-- ===== Header & Navbar ===== -->
+    <header class="sticky top-0 z-[60]">
+        <nav id="navbar" class="relative z-[60] flex items-center justify-between h-[90px] px-4 sm:px-6 lg:px-[90px] backdrop-blur-md transition-colors duration-300">
+            <div class="flex flex-row items-center gap-[16px]">
+                <img id="navbar-logo" class="logo-wiggle h-12 lg:h-14 w-auto cursor-pointer" src="assets/images/navbar/logo.svg" alt="Logo">
+
+                <ul class="hidden lg:flex flex-row gap-[64px] text-[2rem]">
+                    <li><a class="nav-link" href="#hero">Home</a></li>
+                    <li><a class="nav-link" href="#aboutme">About Me</a></li>
+                    <li><a class="nav-link" href="#myskills">My Skills</a></li>
+                    <li><a class="nav-link" href="#experience">My Experience</a></li>
+                </ul>
+            </div>
+
+            <div class="flex flex-row items-center gap-3">
+                <!-- Ikon media sosial -->
+                <div class="hidden lg:flex flex-row items-center gap-[15px]">
+                    <a class="social-link" href="https://x.com/HMSI_ITS" target="_blank" rel="noopener">
+                        <img class="w-11" src="assets/images/navbar/x.svg" alt="X">
+                    </a>
+                    <a class="social-link" href="https://x.com/HMSI_ITS" target="_blank" rel="noopener">
+                        <img class="w-11" src="assets/images/navbar/tiktok.svg" alt="TikTok">
+                    </a>
+                    <a class="social-link" href="https://x.com/HMSI_ITS" target="_blank" rel="noopener">
+                        <img class="w-11" src="assets/images/navbar/ig.svg" alt="Instagram">
+                    </a>
+                    <a class="social-link" href="https://x.com/HMSI_ITS" target="_blank" rel="noopener">
+                        <img class="w-11" src="assets/images/navbar/yt.svg" alt="YouTube">
+                    </a>
+                </div>
+
+                <!-- Tombol menu mobile -->
+                <button id="menuButton" class="icon-button lg:hidden z-[60]" aria-label="Buka menu" aria-expanded="false">
+                    <img id="menuIcon" src="assets/images/navbar/menu.svg" alt="" class="h-[39px] w-[39px]">
+                    <img id="exitIcon" src="assets/images/navbar/exit.svg" alt="" class="h-[39px] w-[39px] hidden">
+                </button>
+            </div>
+        </nav>
+
+        <!-- Menu mobile (geser dari kanan) -->
+        <div id="mobileMenu" class="lg:hidden fixed inset-0 z-[50] backdrop-blur-md bg-black/40 transition-transform duration-300 ease-in-out translate-x-full">
+            <div class="h-[90px]"></div>
+            <ul class="flex flex-col items-center text-center py-6 text-[2rem]">
+                <li class="w-full py-4"><a class="nav-link" href="#hero">Home</a></li>
+                <li class="w-full py-4"><a class="nav-link" href="#aboutme">About Me</a></li>
+                <li class="w-full py-4"><a class="nav-link" href="#myskills">My Skills</a></li>
+                <li class="w-full py-4"><a class="nav-link" href="#experience">My Experience</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- ===== Konten utama ===== -->
+    <main class="relative">
+        <!-- Latar belakang tetap -->
+        <div class="fixed inset-0 -z-20 bg-cover bg-no-repeat bg-center bg-[url('assets/images/background.png')]"></div>
+
+        <!-- Lapisan gelap yang makin pekat saat di-scroll (js/background.js) -->
+        <div id="bg-overlay" class="fixed inset-0 -z-10 bg-black opacity-0 pointer-events-none"></div>
+
+        <!-- Kunang-kunang (dibuat otomatis oleh js/main.js) -->
+        <div id="fireflies" class="fixed inset-0 -z-5 pointer-events-none overflow-hidden"></div>
+
+        <!-- Section 1: Hero -->
+        <section id="hero" class="w-full flex flex-col pt-[166px] md:pt-[270px] justify-center items-center gap-4">
+            <h1 id="hero-title" class="title-game animate-float text-center text-[4rem] md:text-[6rem] lg:text-[8rem]">
+                My Portfolio
+            </h1>
+
+            <!-- Gulungan kertas nama -->
+            <div class="reveal reveal-delay-1 flex min-w-[338px] lg:w-[700px] aspect-[341/43] items-center justify-center pb-1.5 bg-center bg-no-repeat bg-cover lg:bg-contain bg-[url('assets/images/hero/paper-scroll-mobile.svg')] lg:bg-[url('assets/images/hero/paper-scroll-desktop.svg')]">
+                <p id="typed-name" class="font-times font-bold text-[#7A3D21] text-[1.7rem] md:text-[2rem]">
+                    Rafa Akila Rasky
+                </p>
+            </div>
+
+
+            <!-- Tombol Explore More -->
+            <div class="reveal reveal-delay-2 flex w-full justify-center items-center mt-4">
+                <a href="#aboutme" class="btn-shine btn-shine-auto relative inline-block overflow-hidden hover:brightness-90 transition-[transform,filter] duration-100 hover:-translate-y-0.5 active:translate-y-[6px] active:drop-shadow-[0_2px_0_#592918] px-[51px] py-[4px] md:px-[119.5px] md:py-[8px] bg-[linear-gradient(to_bottom,#7A3D21_0%,#C07E4E_50%,#7A3D21_50%,#7A3D21_100%)] rounded-[8px] border-[#7A3D21] border-[1px] outline-[#7A3D21] outline-[1px] drop-shadow-[0_8px_0_#592918]">
+                    <p class="uppercase text-white text-[1.3rem] md:text-[1.75rem] md:leading-none">EXPLORE MORE</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- Section 2: About Me -->
+        <section id="aboutme" class="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-24 py-16 px-6 md:px-16 lg:px-[90px] mt-100 lg:mt-60">
+            <!-- Kartu profil -->
+            <div class="reveal order-1 lg:order-2 shrink-0 flex flex-col items-center gap-6">
+                <!-- Nama & sekolah sudah tercetak di gambar kartu -->
+                <div id="profile-card" class="profile-card relative w-[240px] md:w-[280px] lg:w-[340px] aspect-[300/446]">
+                    <img src="assets/images/about/Rafa Card.png" alt="Kartu profil Rafa Akila Rasky" class="absolute inset-0 w-full h-full pointer-events-none">
+                </div>
+                <a href="#myskills" class="btn-game btn-shine px-[30px] py-[4px] md:px-[48px] md:py-[6px] text-[1rem] md:text-[1.25rem]">Lihat Skill</a>
+            </div>
+
+            <div class="reveal reveal-delay-1 order-2 lg:order-1 flex flex-col gap-8 max-w-[560px] text-center lg:text-left">
+                <h2 class="title-game">About<span class="hidden lg:inline"> Me</span></h2>
+
+                <!-- Kotak dialog -->
+                <div id="dialog" class="dialog-box text-left">
+                    <span class="dialog-speaker">Rafa</span>
+                    <p id="dialog-text" class="font-times text-[#F9DCB4] text-[1rem] md:text-[1.25rem] lg:text-[1.5rem] leading-snug">
+                        Halo semua aku Rafa, aku dari ITS jurusan Sistem Informasi, aku suka ngoding dan belajar.
+                    </p>
+                    <span class="dialog-next" aria-hidden="true">&#9660;</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: My Skills -->
+        <section id="myskills" class="flex justify-center mt-100 px-4">
+            <div class="reveal flex flex-col text-center gap-4">
+                <h2 class="title-game">My Skills</h2>
+
+                <div class="relative">
+                    <!-- Papan kayu desktop & mobile -->
+                    <img src="assets/images/skills/wood-plank.svg" alt="" class="hidden md:block md:w-[500px] lg:w-[769px]">
+                    <img src="assets/images/skills/wood-plank-mobile.svg" alt="" class="block md:hidden w-[25rem] max-w-full">
+
+                    <!-- Isi kertas -->
+                    <div class="absolute inset-0 flex flex-col text-left px-8 md:px-15 pt-8 md:pt-10 gap-1 text-[#592918]">
+                        <h3 class="text-[1.8rem] md:text-[2.5rem] lg:text-[3.75rem] leading-tight">
+                            Aku tertarik dengan mata kuliah yang ada di sisfor
+                        </h3>
+
+                        <!-- Ubah nilai --level (0%–100%) untuk mengatur panjang bar -->
+                        <ul class="font-times font-bold flex flex-col gap-1 md:gap-2 mt-2 text-[1rem] md:text-[1.5rem] lg:text-[2rem]">
+                            <li class="skill stagger-item" style="--i: 0; --level: 80%">
+                                <span class="skill-name">HTML</span>
+                                <span class="skill-bar"><span class="skill-fill"></span></span>
+                            </li>
+                            <li class="skill stagger-item" style="--i: 1; --level: 70%">
+                                <span class="skill-name">CSS</span>
+                                <span class="skill-bar"><span class="skill-fill"></span></span>
+                            </li>
+                            <li class="skill stagger-item" style="--i: 2; --level: 55%">
+                                <span class="skill-name">JavaScript</span>
+                                <span class="skill-bar"><span class="skill-fill"></span></span>
+                            </li>
+                        </ul>
+
+                        <a href="#experience" class="btn-game btn-shine absolute left-1/2 -translate-x-1/2 bottom-[40px] md:bottom-[25px] lg:bottom-[50px] px-[30px] py-[4px] md:px-[60px] md:py-[6px] text-[1rem] md:text-[1.25rem] bg-[linear-gradient(to_bottom,#7A3D21_0%,#C07E4E_50%,#7A3D21_50%,#7A3D21_100%)] border-[#7A3D21]">
+                            My Experience
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: My Experience -->
+        <section id="experience" class="mt-100 mb-50">
+            <div class="flex flex-col gap-[1rem] items-center">
+                <h2 class="title-game text-center reveal">My Experience</h2>
+
+                <!-- Galeri foto 2x2 (klik untuk memperbesar) -->
+                <div class="reveal reveal-left flex flex-col md:flex-row gap-[1rem]">
+                    <img class="exp-photo" tabindex="0" role="button" src="assets/images/experience/foto-1.png" alt="Deskripsi foto 1">
+                    <img class="exp-photo" tabindex="0" role="button" src="assets/images/experience/foto-2.png" alt="Deskripsi foto 2">
+                </div>
+                <div class="reveal reveal-right flex flex-col md:flex-row gap-[1rem]">
+                    <img class="exp-photo" tabindex="0" role="button" src="assets/images/experience/foto-3.png" alt="Deskripsi foto 3">
+                    <img class="exp-photo" tabindex="0" role="button" src="assets/images/experience/foto-4.png" alt="Deskripsi foto 4">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer id="footer" class="w-full h-[500px] md:h-[350px] lg:h-[600px] flex justify-center items-center px-4 py-8 lg:px-[90px] lg:py-[88px] lg:border-t-[20px] lg:border-t-[#7A3D21] bg-cover bg-center bg-[url('assets/images/footer/bg-footer.png')]">
+        <div class="flex flex-col items-center justify-center w-full h-[440px] md:w-[680px] lg:w-[1000px] lg:h-full px-6 py-10 lg:px-[20px] bg-center bg-contain bg-no-repeat bg-[url('assets/images/footer/frame-mobile.png')] md:bg-[url('assets/images/footer/frame-desktop.png')]">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6 text-[1.25rem] lg:text-[32px]">
+                <a class="footer-link" href="#hero">Home</a>
+                <a class="footer-link" href="#aboutme">About Me</a>
+                <a class="footer-link" href="#myskills">My Skills</a>
+                <a class="footer-link" href="#experience">My Experience</a>
+            </div>
+
+            <p class="font-times font-bold text-[#F9DCB4] text-[15px] lg:text-[20px] mt-4">&copy; SIMETRI HMSI ITS</p>
+            
+        </div>
+    </footer>
+
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+
+    <!-- Lightbox: foto experience diperbesar saat diklik -->
+    <div id="lightbox" class="lightbox fixed inset-0 z-[70] flex flex-col items-center justify-center gap-4 bg-black/80 backdrop-blur-sm p-4" aria-hidden="true">
+        <button id="lightbox-close" class="icon-button absolute top-4 right-4 hover:brightness-125" aria-label="Tutup foto">
+            <img src="assets/images/navbar/exit.svg" alt="" class="h-[39px] w-[39px]">
+        </button>
+        <img id="lightbox-img" class="max-h-[80vh] max-w-full rounded-lg border-4 border-[#7A3D21]" alt="">
+        <p id="lightbox-caption" class="font-times text-[#F9DCB4] text-[1.25rem] text-center"></p>
+    </div>
+
+    <!-- Tombol kembali ke atas -->
+    <button id="backToTop" class="back-to-top btn-game fixed bottom-6 right-4 md:right-6 z-[55] w-[56px] h-[56px] font-times text-[1.5rem]" aria-label="Kembali ke atas">&#9650;</button>
+
+    <!-- ===== Script ===== -->
+    <script src="js/menu.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

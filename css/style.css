@@ -1,0 +1,656 @@
+/* =========================================================
+   Portfolio Rafa Akila Rasky — stylesheet utama
+   Urutan isi:
+   1. Font & dasar
+   2. Komponen (judul, tombol, foto, kartu profil, skill, dialog)
+   3. Animasi halaman (reveal, loading, hero, kunang-kunang, dll)
+   4. Fitur game (HUD, achievement, level up, partikel, rainbow)
+   5. Reduced motion
+   ========================================================= */
+
+/* Samakan urutan layer dengan Tailwind, supaya utility Tailwind
+   tetap bisa menimpa class komponen di bawah */
+@layer theme, base, components, utilities;
+
+/* ===== 1. Font & dasar ===== */
+@font-face {
+    font-family: 'Zelda';
+    src: url('../assets/fonts/zelda-wild-breath.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+.font-zelda { font-family: 'Zelda', sans-serif; }
+.font-times { font-family: 'Times New Roman', Times, serif; }
+
+/* Supaya judul section tidak tertutup navbar saat diklik dari menu */
+section { scroll-margin-top: 90px; }
+
+/* ===== 2. Komponen ===== */
+@layer components {
+
+    /* Judul besar bergaya game (putih, garis cokelat, bayangan tebal) */
+    .title-game {
+        text-transform: uppercase;
+        color: #fff;
+        line-height: 1;
+        font-size: 3.5rem;
+        -webkit-text-stroke: 1px #7A3D21;
+        text-shadow: 0 5px 0 #7A3D21;
+    }
+
+    @media (min-width: 768px) {
+        .title-game { font-size: 4.5rem; }
+    }
+
+    @media (min-width: 1024px) {
+        .title-game {
+            font-size: 6rem;
+            -webkit-text-stroke-width: 2px;
+            text-shadow: 0 10px 0 #7A3D21;
+        }
+    }
+
+    /* Tombol hijau 3D yang "ditekan" saat diklik */
+    .btn-game {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        color: #fff;
+        text-transform: uppercase;
+        background: linear-gradient(to bottom, #7A3D21 0%, #C07E4E 50%, #7A3D21 50%, #7A3D21 100%);
+        border: 1px solid #7A3D21;
+        outline: 1px solid #592918;
+        border-radius: 8px;
+        filter: drop-shadow(0 6px 0 #592918);
+        transition: transform 0.1s, filter 0.1s;
+    }
+
+    .btn-game:hover {
+        transform: translateY(-2px);
+        filter: drop-shadow(0 8px 0 #592918) brightness(1.08);
+    }
+
+    .btn-game:active {
+        transform: translateY(5px);
+        filter: drop-shadow(0 1px 0 #592918);
+    }
+
+    /* Link navigasi */
+    .nav-link:hover,
+    .nav-link.is-active {
+        color: #F3B641;
+        text-decoration: underline;
+    }
+
+    .footer-link {
+        color: #C07E4E;
+        transition: color 0.2s, transform 0.2s;
+    }
+
+    .footer-link:hover {
+        color: #F9DCB4;
+        transform: translateY(-4px);
+    }
+
+    .social-link {
+        transition: transform 0.2s, filter 0.2s, opacity 0.2s;
+    }
+
+    .social-link:hover {
+        filter: grayscale(1);
+        opacity: 0.7;
+        transform: translateY(-4px);
+    }
+
+    .icon-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        background: #4C1C0E;
+        border-radius: 8px;
+    }
+
+    /* Foto experience */
+    .exp-photo {
+        width: 22.5rem;
+        max-width: calc(100vw - 32px);
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: zoom-in;
+        transition: transform 0.3s, filter 0.3s;
+    }
+
+    .exp-photo:hover,
+    .exp-photo:focus-visible {
+        transform: scale(1.03) rotate(-1deg);
+        filter: brightness(1.1) drop-shadow(0 8px 0 #592918);
+    }
+
+    @media (min-width: 1024px) {
+        .exp-photo { width: 30rem; }
+    }
+
+    /* Kartu profil (nama & sekolah sudah tercetak di gambar) */
+    .profile-card {
+        container-type: inline-size;
+        border-radius: 4cqw;
+        transition: transform 0.2s ease-out;
+    }
+
+    /* Kilau hologram ala kartu langka, posisinya mengikuti mouse (js/main.js) */
+    .profile-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        mix-blend-mode: overlay;
+        background:
+            radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.7), transparent 45%),
+            linear-gradient(115deg, transparent 30%, rgba(243, 182, 65, 0.5), rgba(74, 162, 148, 0.5), transparent 70%);
+        transition: opacity 0.3s;
+    }
+
+    .profile-card:hover::after { opacity: 1; }
+
+    /* Kotak dialog ala RPG untuk teks About Me */
+    .dialog-box {
+        position: relative;
+        padding: 1.75rem 1.25rem 1.5rem;
+        background: rgba(43, 18, 8, 0.85);
+        border: 4px solid #F9DCB4;
+        outline: 4px solid #592918;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .dialog-speaker {
+        position: absolute;
+        top: -1.1rem;
+        left: 1rem;
+        padding: 0 0.75rem;
+        background: #4AA294;
+        border: 3px solid #F9DCB4;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 1.25rem;
+    }
+
+    .dialog-next {
+        position: absolute;
+        right: 0.75rem;
+        bottom: 0.25rem;
+        color: #F3B641;
+        animation: bob 0.8s ease-in-out infinite;
+    }
+
+    .dialog-box.is-typing .dialog-next { visibility: hidden; }
+
+    /* Bar skill ala status RPG */
+    .skill {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: transform 0.2s, color 0.2s;
+    }
+
+    .skill:hover {
+        transform: translateX(8px);
+        color: #C07E4E;
+    }
+
+    .skill-name { width: 5.5em; flex-shrink: 0; }
+
+    .skill-bar {
+        flex: 1;
+        max-width: 16rem;
+        height: 0.6em;
+        padding: 2px;
+        background: #592918;
+        border-radius: 4px;
+    }
+
+    .skill-fill {
+        display: block;
+        width: 0;
+        height: 100%;
+        border-radius: 2px;
+        /* Warna sama dengan tombol Explore More + garis-garis seperti bar HP di game */
+        background:
+            repeating-linear-gradient(90deg, transparent 0 8px, rgba(89, 41, 24, 0.35) 8px 10px),
+            linear-gradient(to bottom, #7A3D21 0%, #C07E4E 50%, #7A3D21 50%, #7A3D21 100%);
+        transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        transition-delay: calc(0.6s + var(--i) * 0.2s);
+    }
+
+    .is-visible .skill-fill { width: var(--level); }
+}
+
+/* ===== 3. Animasi halaman ===== */
+
+/* Muncul perlahan saat di-scroll (diaktifkan oleh js/main.js) */
+.js .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.js .reveal-left  { transform: translateX(-60px); }
+.js .reveal-right { transform: translateX(60px); }
+
+.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+.js .reveal-delay-1 { transition-delay: 0.15s; }
+.js .reveal-delay-2 { transition-delay: 0.3s; }
+
+/* Item muncul satu per satu setelah induknya terlihat */
+.js .stagger-item { opacity: 0; }
+
+.is-visible .stagger-item {
+    animation: slide-in-left 0.5s ease-out both;
+    animation-delay: calc(0.4s + var(--i) * 0.15s);
+}
+
+@keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* Layar loading ala game (hanya tampil kalau JS aktif) */
+.preloader { display: none; }
+
+.js .preloader {
+    display: flex;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.preloader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.preloader-logo { animation: pulse-glow 1.2s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+    0%, 100% { transform: scale(1);   filter: drop-shadow(0 0 0 #F3B641); }
+    50%      { transform: scale(1.1); filter: drop-shadow(0 0 16px #F3B641); }
+}
+
+.loading-bar {
+    width: min(320px, 80vw);
+    height: 24px;
+    padding: 3px;
+    background: #592918;
+    border: 3px solid #F9DCB4;
+    border-radius: 6px;
+}
+
+.loading-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #F3B641 0 14px, #E09A2B 14px 18px);
+    transition: width 0.3s;
+}
+
+/* Teks berkedip ala "PRESS START" */
+.blink { animation: blink 1s steps(1) infinite; }
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* Judul hero melayang naik-turun */
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+}
+
+@keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
+}
+
+/* Huruf judul hero jatuh satu per satu, dan melompat saat disentuh mouse */
+.hero-letter {
+    display: inline-block;
+    transition: translate 0.2s, color 0.2s;
+}
+
+.js .hero-letter { opacity: 0; }
+
+.page-loaded .hero-letter {
+    animation: letter-drop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    animation-delay: calc(var(--i) * 60ms);
+}
+
+.hero-letter:hover {
+    translate: 0 -12px;
+    color: #F3B641;
+}
+
+@keyframes letter-drop {
+    from { opacity: 0; transform: translateY(-80px) rotate(-10deg); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* Kursor berkedip untuk efek mengetik */
+.typing::after {
+    content: '|';
+    margin-left: 2px;
+    animation: blink 0.8s steps(1) infinite;
+}
+
+/* Navbar jadi lebih gelap setelah halaman di-scroll */
+.nav-scrolled {
+    background-color: rgba(76, 28, 14, 0.55);
+    box-shadow: 0 4px 0 rgba(89, 41, 24, 0.6);
+}
+
+/* Logo navbar bergoyang */
+.logo-wiggle:hover { animation: wiggle 0.5s ease-in-out; }
+
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0); }
+    25%      { transform: rotate(-12deg); }
+    75%      { transform: rotate(12deg); }
+}
+
+/* Kilau cahaya yang menyapu tombol */
+.btn-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+.btn-shine:hover::after { animation: shine 0.7s ease; }
+.btn-shine-auto::after  { animation: shine-loop 3.5s ease-in-out infinite; }
+
+@keyframes shine { to { left: 125%; } }
+
+@keyframes shine-loop {
+    0%       { left: -75%; }
+    25%, 100% { left: 125%; }
+}
+
+/* Tombol kembali ke atas: tersembunyi sampai halaman di-scroll */
+.back-to-top {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s, transform 0.1s, filter 0.1s;
+}
+
+.back-to-top.is-shown {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Lightbox foto */
+.lightbox {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox #lightbox-img {
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.lightbox.is-open #lightbox-img { transform: scale(1); }
+
+/* Kunang-kunang */
+.firefly {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #F3E27A;
+    box-shadow: 0 0 10px 3px rgba(243, 182, 65, 0.8);
+    opacity: 0;
+    animation: firefly-drift var(--dur) ease-in-out infinite, firefly-glow var(--glow) ease-in-out infinite;
+    animation-delay: var(--delay);
+}
+
+@keyframes firefly-drift {
+    0%, 100% { transform: translate(0, 0); }
+    25%      { transform: translate(var(--dx), calc(var(--dy) * -1)); }
+    50%      { transform: translate(calc(var(--dx) * -1), var(--dy)); }
+    75%      { transform: translate(var(--dy), var(--dx)); }
+}
+
+@keyframes firefly-glow {
+    0%, 100% { opacity: 0; }
+    50%      { opacity: 1; }
+}
+
+/* Jejak bintang di belakang kursor */
+.sparkle {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 80;
+    background: #F3B641;
+    clip-path: polygon(50% 0, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0 50%, 39% 39%);
+    animation: sparkle-fade 0.8s ease-out forwards;
+}
+
+@keyframes sparkle-fade {
+    from { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
+    to   { opacity: 0; transform: translate(-50%, 20px) scale(0) rotate(180deg); }
+}
+
+/* ===== 4. Fitur game ===== */
+
+/* HUD: level, bar XP, jumlah trofi, tombol suara */
+.hud {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    background: rgba(43, 18, 8, 0.85);
+    border: 3px solid #F9DCB4;
+    outline: 3px solid #592918;
+    border-radius: 8px;
+    color: #F9DCB4;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.hud-xp {
+    width: 70px;
+    height: 12px;
+    padding: 2px;
+    background: #592918;
+    border-radius: 3px;
+}
+
+.hud-xp-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(to right, #4AA294, #F3B641);
+    transition: width 0.6s ease;
+}
+
+.hud-sound {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: #4C1C0E;
+    font-size: 0.9rem;
+}
+
+.hud.is-bumped { animation: hud-bump 0.4s ease; }
+
+@keyframes hud-bump {
+    50% { transform: scale(1.12); }
+}
+
+@media (min-width: 768px) {
+    .hud { font-size: 1.35rem; }
+    .hud-xp { width: 110px; }
+}
+
+/* Notifikasi "Achievement Unlocked" */
+.toasts {
+    position: fixed;
+    top: 104px;
+    right: 16px;
+    z-index: 75;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: min(320px, calc(100vw - 32px));
+    padding: 0.6rem 0.9rem;
+    background: rgba(43, 18, 8, 0.92);
+    border: 3px solid #F3B641;
+    outline: 3px solid #592918;
+    border-radius: 8px;
+    animation: toast-in 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.toast.is-leaving { animation: toast-out 0.35s ease-in forwards; }
+
+.toast-icon {
+    font-size: 2rem;
+    animation: trophy-spin 0.8s ease 0.3s both;
+}
+
+.toast-label { color: #F3B641; font-size: 0.95rem; }
+.toast-title { color: #fff; font-size: 1.3rem; line-height: 1.1; }
+.toast-xp    { margin-left: auto; color: #5AB3AD; font-size: 1.1rem; }
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateX(120%); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes toast-out {
+    to { opacity: 0; transform: translateX(120%); }
+}
+
+@keyframes trophy-spin {
+    from { transform: rotateY(0) scale(0.5); }
+    to   { transform: rotateY(360deg) scale(1); }
+}
+
+/* Tulisan besar "LEVEL UP!" */
+.level-up {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    animation: level-up-pop 1.8s ease forwards;
+}
+
+.level-up strong {
+    color: #F3B641;
+    font-size: clamp(3rem, 12vw, 8rem);
+    font-weight: 400;
+    line-height: 1;
+    -webkit-text-stroke: 2px #7A3D21;
+    text-shadow: 0 8px 0 #7A3D21, 0 0 40px rgba(243, 182, 65, 0.8);
+}
+
+.level-up span {
+    color: #fff;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    text-shadow: 0 3px 0 #7A3D21;
+}
+
+@keyframes level-up-pop {
+    0%   { opacity: 0; transform: scale(0.3); }
+    15%  { opacity: 1; transform: scale(1.15); }
+    25%  { transform: scale(1); }
+    80%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* Layar bergetar sedikit saat level up.
+   Dipasang ke section (bukan body/main) agar elemen fixed tidak ikut bergeser */
+.shake main section { animation: shake 0.4s linear; }
+
+@keyframes shake {
+    0%, 100% { translate: 0 0; }
+    20%      { translate: -6px 3px; }
+    40%      { translate: 5px -4px; }
+    60%      { translate: -4px -2px; }
+    80%      { translate: 3px 4px; }
+}
+
+/* Partikel kotak pixel yang meletup saat klik */
+.pixel {
+    position: fixed;
+    z-index: 85;
+    width: var(--size, 6px);
+    height: var(--size, 6px);
+    background: var(--color, #F3B641);
+    pointer-events: none;
+    animation: pixel-burst var(--dur, 0.6s) cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+@keyframes pixel-burst {
+    from { opacity: 1; transform: translate(-50%, -50%); }
+    to   { opacity: 0; transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(var(--rot, 0deg)); }
+}
+
+/* Mode pelangi dari kode rahasia */
+.rainbow main section,
+.rainbow footer {
+    animation: rainbow 3s linear infinite;
+}
+
+@keyframes rainbow {
+    to { filter: hue-rotate(360deg); }
+}
+
+/* ===== 5. Hormati pengguna yang mematikan animasi di perangkatnya ===== */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .js .reveal { opacity: 1; transform: none; transition: none; }
+    .animate-float, .typing::after, .btn-shine::after, .logo-wiggle:hover,
+    .blink, .dialog-next, .preloader-logo { animation: none; }
+    .js .hero-letter, .js .stagger-item { opacity: 1; animation: none; }
+    .skill-fill { transition: none; }
+}

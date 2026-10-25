@@ -1,1 +1,0 @@
-# Simetriasikk.github.io
